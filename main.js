@@ -127,20 +127,18 @@ function customer(inventory) {
 
 		console.log('pid' + pid);
 
+		var newStockQuantity = inventory[pid].getStockQuantity() - q;
+
 		connection.query(
-			'SELECT * FROM `Products` WHERE `ItemID` = ?',
+			'UPDATE `Famazon`.`Products` SET `StockQuantity` = ? WHERE `ItemID` = ?',
 			[
+			    newStockQuantity,
 			    pid
 			],
-			function(err, rows, fields) {
+			function(err, results) {
 				if (err) throw err;
-
-				//console.log('The solution is: ', rows);
-				//console.log(fields);
-				//parse row into Product object and add to inventory
-				rows.forEach(function(row) {
-					console.log(row);
-				});
+				
+				console.log(results);
 
 				callback(null, pid, q);
 			}
