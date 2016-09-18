@@ -44,6 +44,9 @@ var Product = function(id, productName, departmentName, price, stockQuantity) {
 	this.getPrice = function() {
 		return price;
 	}
+	this.getStockQuantity = function () {
+		return stockQuantity;
+	}
 }
 
 module.exports = Product;
