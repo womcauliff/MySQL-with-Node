@@ -12,7 +12,7 @@ function main() {
 	setUpInventory(handleInventory);
 
 	function handleInventory (err, inventory) {
-		console.log("handleInventory()");
+		//console.log("handleInventory()");
 		if (err) throw err;
 		//begin interactions with customer
 		customer(inventory);
@@ -28,15 +28,13 @@ function main() {
  * database. Response parameter will be an array of Product objects.
  */
 function setUpInventory(callback) {
-	console.log("setUpInventory()");
+	//console.log("setUpInventory()");
 	var inventory = [];
 	connection.connect();
 
-	connection.query('SELECT * FROM `Products`', function(err, rows, fields) {
+	connection.query('SELECT * FROM `Products` ORDER BY `DepartmentName` ASC', function(err, rows, fields) {
 		if (err) throw err;
 
-		//console.log('The solution is: ', rows);
-		//console.log(fields);
 		//parse row into Product object and add to inventory
 		rows.forEach(function(row) {
 			inventory[row.ItemID] = new Product(
@@ -53,7 +51,7 @@ function setUpInventory(callback) {
 }
 
 function displayInventory(inventory, callback) {
-	console.log("displayInventory()");
+	//console.log("displayInventory()");
 
 	inventory.forEach(function(Product) {
 		console.log(
@@ -68,11 +66,12 @@ function displayInventory(inventory, callback) {
 }
 
 function customer(inventory) {
-	console.log("customer()");
-	displayInventory(inventory, shop);
+	//console.log("customer()");
+	//displayInventory(inventory, shop);
+	shop(null);
 
 	function shop(err) {
-		console.log("shop()");
+		//console.log("shop()");
 		if(err) throw err;
 
 		inquirer.prompt([
@@ -83,7 +82,11 @@ function customer(inventory) {
 				choices: function() {
 					var choices = [];
 					inventory.forEach(function(Product){
-						choices.push("[" + Product.getId().toString() + "] | " + Product.getProductName());
+						choices.push(
+							"[" + Product.getId().toString() + "] | " 
+							+ Product.getDepartmentName() + " | "
+							+ Product.getProductName()
+						);
 					});
 					choices.push(new inquirer.Separator());
 					return choices;
@@ -117,15 +120,13 @@ function customer(inventory) {
 		});
 	}
 	function makeOrder(pid, q, callback) {
-		console.log('makeOrder()');
+		//console.log('makeOrder()');
 
 		if (q > inventory[pid].getStockQuantity()) {
 			console.log('Insufficient quantity!');
 			connection.end();
 			return;
 		}
-
-		console.log('pid' + pid);
 
 		var newStockQuantity = inventory[pid].getStockQuantity() - q;
 
@@ -145,7 +146,7 @@ function customer(inventory) {
 		);	
 	}
 	function calculateTotal(err, pid, q) {
-		console.log('calculateTotal()');
+		//console.log('calculateTotal()');
 		if (err) throw err;
 
 		console.log(

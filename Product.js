@@ -10,7 +10,7 @@
  * @param {Number} stockQuantity - the amount of this Product in the database inventory
  */
 var Product = function(id, productName, departmentName, price, stockQuantity) {
-	console.log("Product()");
+	//console.log("Product()");
 
 	if(id == undefined 
 	|| productName == undefined
